@@ -199,7 +199,7 @@ h1{
   width: 45px;
   height: 47px;
   float: right;
-  margin: 1px 344px 77px -106px;
+  margin: -82px 195px 114px -77px;
 }
 
 .offer {
@@ -292,9 +292,9 @@ form input{
 }
 button {
 background:#0078c4 ;
-width: 92px;
+width: 96px;
 height: 47px;
-margin: 0 10px 10px -103px;
+margin: 0 10px 10px -92px;
 border: none;
 }
 
@@ -400,6 +400,12 @@ pre .string.value {
 }
 
 .subcircle img{
-    margin:-67px 0 0 -19px;
+    
 
 }
+#search-box{
+    width: 457px;
+    height: 47px;
+    margin: 29px -4px 37px 1px;
+}
+
