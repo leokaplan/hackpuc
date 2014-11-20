@@ -62,10 +62,28 @@ widget = (url) ->
             "<iframe id=\"ytplayer\" type=\"text/html\" width=\"640\" height=\"390\"
               src=\"http://www.youtube.com/embed/"..id.."?autoplay=1&origin=http://example.com\"frameborder=\"0\"/>"
 
-search = (query) ->
+wikipedia = (query) ->
     url = "http://en.wikipedia.org/w/api.php?action=opensearch&search="..query
-    url.."</br>"..table.tostring({http.request(url)})
-    
+    res = util.from_json(http.request(url))
+    res = item for item in *res[2,]
+    --url.."</br>"..table.concat(res,"</br>")
+    res
+
+youtube = (query) ->
+    url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="..query.."&type=video"--&key={YOUR_API_KEY}"
+    res = util.from_json(http.request(url))
+    res = item for item in *res[2,]
+    --url.."</br>"..table.concat(res,"</br>")
+    res
+
+mix = (tab) ->
+    temp = {}
+    for i=1,#tab do
+        table.insert(temp,table.concat(tab[i],"</br>"))
+    table.concat(temp,"</br>")
+    temp
+search = (query) ->
+    table.concat(mix({youtube(query),wikipedia(query)}),"</br>")
 
 class extends lapis.Application
   "/": => "oi"
