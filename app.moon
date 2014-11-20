@@ -29,7 +29,8 @@ widget = (url) ->
             "<img src=\""..url.."\">"
         when "youtube"
             id = string.match(url,"[^%s]+%.youtube%.com/watch%?v=(%w*)")
-            id
+            "<iframe id=\"ytplayer\" type=\"text/html\" width=\"640\" height=\"390\"
+              src=\"http://www.youtube.com/embed/"..id.."?autoplay=1&origin=http://example.com\"frameborder=\"0\"/>"
 class extends lapis.Application
   "/": => "oi"
   -- html
