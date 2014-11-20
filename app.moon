@@ -1,6 +1,9 @@
 lapis = require "lapis"
 util = require "lapis.util"
 encoding = require "lapis.util.encoding"
+http = require "lapis.nginx.http"
+
+-------------------------requires----------------------------------
 
 url_decode = (str) ->
     str = string.gsub(str, "+", " ")
@@ -12,6 +15,33 @@ url_encode = (str) ->
     str = string.gsub(str, "([^%w %-%_%.%~])", (c) -> string.format("%%%02X", string.byte(c)))
     str = string.gsub(str, " ", "+")
     str
+table.key_to_str  = (k) ->
+    if "string" == type( k ) and string.match( k, "^[_%a][_%a%d]*$" ) 
+        k
+    else
+        "[" .. table.val_to_str( k ) .. "]"
+
+table.val_to_str = (v) ->
+    if "string" == type(v) 
+        v = string.gsub( v, "\n", "\\n" )
+        if string.match( string.gsub(v,"[^'\"]",""), '^"+$' ) 
+            "'" .. v .. "'"
+        else
+            '"' .. string.gsub(v,'"', '\\"' ) .. '"'
+    else
+        "table" == type( v ) and table.tostring( v ) or tostring( v )
+
+table.tostring = (tbl) ->  
+    result, done = {}, {}
+    for k, v in ipairs(tbl) do
+        table.insert(result, table.val_to_str(v))
+        done[k] = true
+    for k, v in pairs(tbl) do
+        if not done[k] then
+              table.insert(result,table.key_to_str(k).."="..table.val_to_str(v))
+    "{"..table.concat(result,",").."}"
+    
+-----------------------utils--------------------------------------
 
 get_type = (url) ->
     if string.match(url,"[^%s]+%.jpg") or string.match(url,"[^%s]+%.png") or string.match(url,"[^%s]+%.gif") or string.match(url,"[^%s]+%.bmp")
@@ -32,6 +62,11 @@ widget = (url) ->
             "<iframe id=\"ytplayer\" type=\"text/html\" width=\"640\" height=\"390\"
               src=\"http://www.youtube.com/embed/"..id.."?autoplay=1&origin=http://example.com\"frameborder=\"0\"/>"
 
+search = (query) ->
+    url = "http://en.wikipedia.org/w/api.php?action=opensearch&search="..query
+    url.."</br>"..table.tostring({http.request(url)})
+    
+
 class extends lapis.Application
   "/": => "oi"
   -- html
@@ -44,7 +79,7 @@ class extends lapis.Application
   -- html
   "/note/:id": => encoding.decode_base64(url_decode(@params.id))
   -- json/list_item_obj
-  "/search/:query": => tojson(search(@params.query))
+  "/search/:query": => search(@params.query)
   --html/div
   [widget: "/widget/:url"]: => widget(@params.url)
   --json/string
