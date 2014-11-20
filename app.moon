@@ -32,7 +32,7 @@ class extends lapis.Application
   [widget: "/widget/:url"]: => widget(@params.url)
   --json/string
   --[publish: "/publish"]: => encode(parse(@params.note))
-  --[publish: "/publish"]: => encoding.encode_base64(@url_for("widget",url: util.escape(#{@params.input})))
-  [publish: "/publish"]: => widget(@params.input)
+  [publish: "/publish"]: => encoding.encode_base64(widget(@params.input))
+  --[publish: "/publish"]: => widget(@params.input)
   --html
   --"/": => render: "error", status: 404
