@@ -1,16 +1,27 @@
 lapis = require "lapis"
 
+-- void -> html
+                     
 class extends lapis.Application
   "/": => "oi"
   -- html
-  "/note/": => editor!
+  "/note": => @html ->
+    h1 "editor"
+    div class:"body", ->
+        form method: "POST", action:@url_for("publish"), ->
+            input type: "text", name:"input1"
+            input type: "text", name:"input2"
+            input type: "text", name:"input3"
+            input type: "text", name:"input4"
+            input type: "submit"
   -- html
-  "/note/:id/": => asm_page(decode(@params.id))
+  "/note/:id": => asm_page(decode(@params.id))
   -- json/list_item_obj
-  "/search/:query/": => tojson(search(@params.query))
+  "/search/:query": => tojson(search(@params.query))
   --html/div
-  "/widget/:url/": => widget(@params.url)
+  "/widget/:url": => widget(@params.url)
   --json/string
-  "/publish/:note/": => encode(parse(@params.note))
+  --[publish: "/publish"]: => encode(parse(@params.note))
+  [publish: "/publish"]: => "#{@params.input1}</br>#{@params.input2}</br>#{@params.input3}</br>#{@params.input4}"
   --html
-  "*": =>  render(404)
+  --"/": => render: "error", status: 404
