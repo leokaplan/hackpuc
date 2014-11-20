@@ -27,8 +27,10 @@ widget = (url) ->
             "<iframe id=\"ytplayer\" type=\"text/html\" width=\"640\" height=\"390\"
               src=\"http://www.youtube.com/embed/" + id + "?autoplay=1&origin=http://example.com\"frameborder=\"0\"/>"
 
+html_dir = './public/';
+
 app.get '/', (req, res) ->
-  res.send '404'
+  res.sendFile html_dir + 'index.html'
 
 app.get '/note', (req, res) ->
   res.send """
@@ -49,7 +51,7 @@ app.get '/note/:id', (req, res) ->
   res.send new Buffer(decodeURIComponent(req.params.id), 'base64').toString 'ascii'
 
 app.post '/publish', (req, res) ->
-  res.send encodeURIComponent(new Buffer(widget(req.body.input)).toString 'base64')
+  res.send encodeURIComponent(new Buffer(widget(decodeURIComponent(req.body.input))).toString 'base64')
 
 app.listen app.get('port'), ->
   console.log "Node app is running at localhost:" + app.get('port')
