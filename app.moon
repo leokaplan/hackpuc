@@ -16,7 +16,7 @@ url_encode = (str) ->
 get_type = (url) ->
     if string.match(url,"[^%s]+%.jpg") or string.match(url,"[^%s]+%.png") or string.match(url,"[^%s]+%.gif") or string.match(url,"[^%s]+%.bmp")
         "image"
-    if string.match(url,"[^%s]+%.youtube%.com/watch%?v=(%w*)")-- or string.match(url,"http://www%.youtu%.be/(%w*)(&(amp;)?[%w\?=]*)?")
+    elseif string.match(url,"[^%s]+%.youtube%.com/watch%?v=(%w*)")-- or string.match(url,"http://www%.youtu%.be/(%w*)(&(amp;)?[%w\?=]*)?")
         "youtube"
     else
         "link"
@@ -31,6 +31,7 @@ widget = (url) ->
             id = string.match(url,"[^%s]+%.youtube%.com/watch%?v=(%w*)")
             "<iframe id=\"ytplayer\" type=\"text/html\" width=\"640\" height=\"390\"
               src=\"http://www.youtube.com/embed/"..id.."?autoplay=1&origin=http://example.com\"frameborder=\"0\"/>"
+
 class extends lapis.Application
   "/": => "oi"
   -- html
