@@ -1,6 +1,19 @@
 lapis = require "lapis"
 util = require "lapis.util"
 encoding = require "lapis.util.encoding"
+
+get_type = (url) ->
+    if string.match(url,"[^%s]+%.jpg") or string.match(url,"[^%s]+%.png") or string.match(url,"[^%s]+%.gif") or string.match(url,"[^%s]+%.bmp")
+        "image"
+    else
+        "link"
+widget = (url) ->
+    switch get_type(url)
+        when "link"
+            "<a href=\""..url.."\" >"..url.."</a>"
+        when "image"
+            "<img src=\""..url.."\">"
+       -- when "youtube"
                      
 class extends lapis.Application
   "/": => "oi"
@@ -9,19 +22,17 @@ class extends lapis.Application
     h1 "editor"
     div class:"body", ->
         form method: "POST", action:@url_for("publish"), ->
-            input type: "text", name:"input1"
-            input type: "text", name:"input2"
-            input type: "text", name:"input3"
-            input type: "text", name:"input4"
+            input type: "text", name:"input"
             input type: "submit"
   -- html
   "/note/:id": => encoding.decode_base64(@params.id)
   -- json/list_item_obj
   "/search/:query": => tojson(search(@params.query))
   --html/div
-  "/widget/:url": => widget(@params.url)
+  [widget: "/widget/:url"]: => widget(@params.url)
   --json/string
   --[publish: "/publish"]: => encode(parse(@params.note))
-  [publish: "/publish"]: => encoding.encode_base64("#{@params.input1}</br>#{@params.input2}</br>#{@params.input3}</br>#{@params.input4}")
+  --[publish: "/publish"]: => encoding.encode_base64(@url_for("widget",url: util.escape(#{@params.input})))
+  [publish: "/publish"]: => widget(@params.input)
   --html
   --"/": => render: "error", status: 404
