@@ -1,6 +1,6 @@
 lapis = require "lapis"
-
--- void -> html
+util = require "lapis.util"
+encoding = require "lapis.util.encoding"
                      
 class extends lapis.Application
   "/": => "oi"
@@ -15,13 +15,13 @@ class extends lapis.Application
             input type: "text", name:"input4"
             input type: "submit"
   -- html
-  "/note/:id": => asm_page(decode(@params.id))
+  "/note/:id": => encoding.decode_base64(@params.id)
   -- json/list_item_obj
   "/search/:query": => tojson(search(@params.query))
   --html/div
   "/widget/:url": => widget(@params.url)
   --json/string
   --[publish: "/publish"]: => encode(parse(@params.note))
-  [publish: "/publish"]: => "#{@params.input1}</br>#{@params.input2}</br>#{@params.input3}</br>#{@params.input4}"
+  [publish: "/publish"]: => encoding.encode_base64("#{@params.input1}</br>#{@params.input2}</br>#{@params.input3}</br>#{@params.input4}")
   --html
   --"/": => render: "error", status: 404
