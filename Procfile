@@ -1,3 +1,1 @@
-web: 
-    moonc app.moon 
-    lapis server production
+web: moonc app.moon; lapis server production
