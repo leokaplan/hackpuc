@@ -8,6 +8,7 @@ app.use body_parser.json()
 app.use body_parser.urlencoded(extended: true) 
 
 http = require 'http'
+util = require 'util'
 #-----------------------------config
 
 
@@ -52,8 +53,14 @@ widget = (url,cb) ->
             "<iframe id=\"ytplayer\" type=\"text/html\" width=\"300\" height=\"250\"
               src=\"http://www.youtube.com/embed/" + id + "?autoplay=1&origin=http://example.com\"frameborder=\"0\"/>"
 
-ddg = (query,cb) -> http.get { host: "http://duckduckgo.com/?q="+query }, (res) -> cb(res)
+#ddg = (query,cb) -> http.get("http://duckduckgo.com/?q="+query , (res1) -> res1.on('data', (data)->cb(data)))
+ddg = (query,cb) -> 
+  str = ""
+  callb = (resp) ->
+    resp.on('data',(data)->str+=data)
+    resp.on('end',(data)->cb(str))
 
+  http.get("http://api.duckduckgo.com/?q="+query+"&format=json",callb)
 #----------------------------actions
 html_dir = './public/'
 home = ->
@@ -67,7 +74,14 @@ app.get '/note/:id', (req, res) ->
   else home()
 
 app.get '/search/:query', (req, res) ->
-  ddg req.params.query, (x)->res.send(x)
+
+  #f = (x) -> console.log step(step(check(x).input).input)
+  f = (x) ->
+    #console.log check(x)
+    res.send x+""
+    #[0].match("\"data\":{"))
+  ddg req.params.query,f
+#res.send
   #widget(decodeURIComponent(req.params.query))
 
 app.post '/publish', (req, res) ->
