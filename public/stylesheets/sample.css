@@ -423,3 +423,22 @@ h2 p{
   margin:10px;
 }
 
+.wiki{
+  font-family: Lato, Helvetica, sans-serif;
+  padding:30px;
+  text-align:identify;
+  width: 500px;
+  height: 300px;
+  background: #dbdee0;
+  font-size: 25px;
+  margin: 5px 10px 10px 10px;
+
+}
+.wiki p{
+  margin: 5px;
+  text-align: justify;
+}
+.wiki h1{
+  margin: 10px;
+  font-size: 28px;  
+}
