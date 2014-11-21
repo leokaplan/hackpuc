@@ -201,7 +201,7 @@ h1{
   width: 45px;
   height: 47px;
   float: right;
-  margin: -82px 195px 114px -77px;
+  margin: -82px 154px 114px -35px
 }
 
 .offer {
@@ -353,7 +353,7 @@ h1.titulo{
 }
 
 .linhaTitulo{
-	margin:32px 20px -47px 185px;
+	margin: 32px 20px -47px 153px;
 	height:2px;
 	width:621px;
 	background-color:#c0c0c0;
