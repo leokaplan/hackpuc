@@ -5,5 +5,9 @@ $ ->
   $('#publish-btn').click -> console.log 'publish'
 
   $('#search-btn').click ->
-    $.get '/search/' + encodeURIComponent($('#search-box').val()), (data) ->
+    $.get '/widget/' + encodeURIComponent($('#search-box').val()), (data) ->
       gridster.add_widget data
+  
+  $( "#search" ).autocomplete { source: "/search", minLength: 3, 
+                               select: ( event, ui ) -> 
+                                 log( if ui.item then "Selected: " + ui.item.value + " aka " + ui.item.id else "Nothing selected, input was " + this.value )} 

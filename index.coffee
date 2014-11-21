@@ -73,16 +73,16 @@ app.get '/note/:id', (req, res) ->
     res.send new Buffer(decodeURIComponent(req.params.id), 'base64').toString 'ascii'
   else home()
 
-app.get '/search/:query', (req, res) ->
-
+app.post '/search', (req, res) ->
   #f = (x) -> console.log step(step(check(x).input).input)
   f = (x) ->
     #console.log check(x)
     res.send x+""
     #[0].match("\"data\":{"))
-  ddg req.params.query,f
+  ddg req.body.term,f
 #res.send
-  #widget(decodeURIComponent(req.params.query))
+
+app.get '/widget/:query', (req, res) -> widget(decodeURIComponent(req.params.query))
 
 app.post '/publish', (req, res) ->
   res.send encodeURIComponent(new Buffer(widget(decodeURIComponent(req.body.input))).toString 'base64')
