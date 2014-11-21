@@ -29,18 +29,16 @@ search = (term, cb) ->
   for api in [wikipedia,youtube]
     api(term,deliver)
 
-
 get_type = (url) ->
   if url.match "[^\s]+\.(jpg|png|gif|bmp)"
     "image"
   else if url.match "[^\s]+\.youtube\.com/watch\\?v=\w*"
-    console.log 'qq'
     # or string.match(url,"http://www%.youtu%.be/(%w*)(&(amp;)?[%w\?=]*)?")
     "youtube"
   else if url.match "http://\w*"
       "link"
-  else
-      "search"
+  else "search"
+
 widget = (url,cb) ->
     switch get_type(url)
         when "search"
@@ -51,41 +49,27 @@ widget = (url,cb) ->
             "<img src=\"" + url + "\">"
         when "youtube"
             id = url.match("[^\s]+\.youtube\.com/watch\?v=(\w*)")
-            "<iframe id=\"ytplayer\" type=\"text/html\" width=\"640\" height=\"390\"
+            "<iframe id=\"ytplayer\" type=\"text/html\" width=\"300\" height=\"250\"
               src=\"http://www.youtube.com/embed/" + id + "?autoplay=1&origin=http://example.com\"frameborder=\"0\"/>"
 
 #----------------------------actions
 html_dir = './public/'
-app.get '/', (req, res) ->
+home = ->
   res.sendFile html_dir + 'index.html'
 
-app.get '/note', (req, res) ->
-  res.send """
-        <html>
-        <body>
-        <h1>editor</h1>
-        <div class="body">
-                <form method="POST" action="/publish">
-                        <input type="text" name="input" \>
-                        <input type="submit" \>
-                </form>
-        </div>
-        </body>
-        </html>
-        """
+app.get '/', (req, res) -> home()
 
 app.get '/note/:id', (req, res) ->
-  res.send new Buffer(decodeURIComponent(req.params.id), 'base64').toString 'ascii'
+  if req.params.id
+    res.send new Buffer(decodeURIComponent(req.params.id), 'base64').toString 'ascii'
+  else home()
 
 app.get '/search/:query', (req, res) ->
   temp = widget(decodeURIComponent(req.params.query))
-  console.log(temp)
   res.send temp
-  #console.log("oi")
 
 app.post '/publish', (req, res) ->
   res.send encodeURIComponent(new Buffer(widget(decodeURIComponent(req.body.input))).toString 'base64')
-
 
 app.listen app.get('port'), ->
   console.log "Node app is running at localhost:" + app.get('port')
