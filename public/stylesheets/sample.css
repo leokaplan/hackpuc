@@ -145,8 +145,10 @@ footer{
 
 }
 footer p{
-  float:right;
-  margin: 17px 179px 14px 0;
+  text-align:center;
+  margin: 15px;
+  font-family:lato;
+
   color: #fff;
 }
 .background{
@@ -407,5 +409,15 @@ pre .string.value {
     width: 457px;
     height: 47px;
     margin: 29px -4px 37px 1px;
+}
+
+ h2{
+  color: #444444;
+  margin: 19px;
+  font-size: 16px;
+}
+
+h2 p{
+  margin:10px;
 }
 
